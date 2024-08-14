@@ -2,33 +2,33 @@
 const role = 'administrator';
 
 if (role === 'administrator') {
-    document.querySelectorAll('.remove-btn').forEach(button =>
-        button.addEventListener('click', () => button.closest('tr').remove())
-    );
+    const removeButtons = document.querySelectorAll('.remove-btn');
+    for (let i = 0; i < removeButtons.length; i++) {
+        removeButtons[i].onclick = function() {
+            const row = this.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        };
+    }
 
-    document.querySelectorAll('.edit-btn').forEach(button =>
-        button.addEventListener('click', editSave)
-    );
-}
-
-function editSave() {
-    const row = this.closest('tr');
-    const cells = row.querySelectorAll('td:not(.actions)');
-    const isEditing = this.classList.contains('edit-btn');
-
-    cells.forEach(cell => {
-        if (isEditing) {
-            const input = document.createElement('input');
-            input.value = cell.textContent;
-            cell.textContent = '';
-            cell.appendChild(input);
-        } else {
-            const input = cell.querySelector('input');
-            cell.textContent = input ? input.value : '';
-        }
-    });
-
-    this.textContent = isEditing ? 'Save' : 'Edit';
-    this.classList.toggle('edit-btn');
-    this.classList.toggle('save-btn');
+    const editButtons = document.querySelectorAll('.edit-btn');
+    for (let i = 0; i < editButtons.length; i++) {
+        editButtons[i].onclick = function() {
+            const row = this.parentNode.parentNode;
+            const cells = row.getElementsByTagName('td');
+            
+            if (this.innerHTML === 'Edit') {
+                for (let j = 0; j < cells.length - 1; j++) {
+                    const cellText = cells[j].innerHTML;
+                    cells[j].innerHTML = `<input type="text" value="${cellText}">`;
+                }
+                this.innerHTML = 'Save';
+            } else {
+                for (let j = 0; j < cells.length - 1; j++) {
+                    const input = cells[j].querySelector('input');
+                    cells[j].innerHTML = input.value;
+                }
+                this.innerHTML = 'Edit';
+            }
+        };
+    }
 }
