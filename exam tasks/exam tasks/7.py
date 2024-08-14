@@ -25,12 +25,14 @@ def is_prime(num):
     return True
 
 def distance(g, m, n):
-    prime = None
+    primes = []
     
-    for num in range(m, n + 1):
-        if is_prime(num):
-            if prime is not None and num - prime == g:
-                return [prime, num]
-            prime = num
-            
+    for i in range(m, n + 1):
+        if is_prime(i):
+            primes.append(i)
+            if len(primes) >= 2 and primes[-1] - primes[-2] == g:
+                return primes[-2:]
+    
     return None
+
+print(distance(8, 585348, 685348))
